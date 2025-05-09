@@ -1243,10 +1243,87 @@ for (let i = 1; i <= total; i++) {
 
 ### 4.2. for in 구문
 
+- for 문으로 모두 가능하다.
+- for 를 `객체를 대상`으로 편리하게 사용하도록 지원하는 문법
+
+```js
+// for in 구문 예제 (대상은 객체 속성 반복)
+const singer = {
+  id: "iu123",
+  name: "아이유",
+  age: 30,
+};
+
+// 개발자가 직접 알아내는 경우
+// console.log(singer.id);
+// console.log(singer.name);
+// console.log(singer.age);
+
+// 반복문 활용
+for (let key in singer) {
+  console.log(key);
+  console.log(singer[key]);
+}
+```
+
 ### 4.3. for of 구문
+
+- for 문으로 모두 가능하다.
+- for 를 `배열, 문자열 등을 대상`으로 편리하게 사용하도록 지원하는 문법
+- `interator` 즉, `순서가 있는 데이터형`에서 사용
+
+```js
+const citiesArr = ["대구", "서울", "부산"];
+for (let city of citiesArr) {
+  console.log(city);
+}
+
+const words = "안녕하세요, 반가워요.";
+for (let i of words) {
+  console.log(i);
+}
+```
 
 ### 4.4. while 구문
 
+- `조건이 참`인 동안 무한히 반복함.
+- 반복에 횟수를 모르는 경우
+
+```js
+while (조건) {
+  할 일;
+  반드시 거짓으로 만들어야 합니다.
+}
+```
+
+```js
+let count = 0;
+
+while (count < 5) {
+  // 거짓을 만들기 위한 조건을 작성함.
+  count = count + 1;
+  console.log(count);
+}
+```
+
 ### 4.5. do while 구문
+
+- while 과 다르게 일단 실행하고 조건 검사
+
+```js
+do {
+  할 일;
+} while (조건)
+```
+
+```js
+let count = 0;
+
+do {
+  // 거짓을 만들기 위한 조건을 작성함.
+  count = count + 1;
+  console.log(count);
+} while (count < 5);
+```
 
 ## 5. 함수 (Function)
