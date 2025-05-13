@@ -1823,3 +1823,377 @@ addFN(); // 호이스팅 에러 발생한다. (주의하자)
 function add() {}
 const addFN = function () {};
 ```
+
+## 7. 함수 추가 정리
+
+### 7.1. 함수를 만들 시점 (언제 함수를 만들까에 대한 안내)
+
+#### 7.1.1. 코드가 너무 긴 경우(`하나의 결과를 만들기 위해서 작성 시`)
+
+- 코드 가독성이 너무 떨어져서 추후 분석이 곤란할 때
+- 하나의 결과를 만들기 위한 과정을 작성 중 너무 많은 코드가 작성될 때
+- 여러 줄이 작성되어서 한 개의 결과를 만든다면 함수로 묶어서 만들까??
+
+#### 7.1.2. 동일한 기능이 여러 번 사용될 때
+
+- 2번 이상 동일한 기능이라면 함수를 만들까? 고민
+- 2번 이상 동일한 기능인데 재료(매개변수)만 다르다? 함수를 만들까? 고민
+
+#### 7.1.3. 코드를 누군가에게 주어야 할 때
+
+- 코드를 공유할 때 함수를 만들까? 고민
+
+### 7.2. 함수 만드는 법
+
+- `{}` 로 코드 블럭을 이용해서 묶어준다.
+- 이름을 짓는데, `동사`로 지어준다. (기본: Camel Case, 생성자 함수: Pascal Case)
+- 이름 뒤에 `(재료, 재료)` 를 작성한다.
+- function 키워드를 작성해 준다.
+- `JSDoc` 으로 사용 설명서를 작성해 주면 좋겠다.
+
+### 7.3. 함수 사용법(`호출, Call` 등으로 명칭함)
+
+- 함수이름();
+- 함수를 호출했다.
+- 함수명 Call 했다.
+
+### 7.4. 함수 샘플
+
+- 넓이를 계산하는 기능, 그런데 2번 이상 사용, 누군가에게 공유
+
+````js
+/**
+ * 너비를 계산해 주는 함수
+ * @param {number} _width
+ * @param {number} _height
+ * @returns {number}
+ * -- 함수 사용 예 --
+ * ```js
+ * const result = calcRect(5, 4);
+ * ```
+ */
+function calcRect(_width = 0, _height = 0) {
+  // 추후에 무수하게 예외 처리 코드가 작성이 된다.
+  return _width * _height;
+}
+// 함수 호출
+const result = calcRect(5, 4);
+````
+
+### 7.5. 함수의 추가 지식
+
+- 매개변수에 기본값을 지정할 수 있다.
+
+```js
+function 함수명(매개변수 = 기본값) {}
+```
+
+- 매개변수의 개수에는 제한이 없다.
+
+```js
+function 함수명(매개변수1, 매개변수2) {
+  const params = arguments; // 배열로 접근 가능
+}
+함수명(1, 2, 3, 4, 5);
+```
+
+- arguments 말고 `rest 파라미터` 를 쓰자.
+
+```js
+function 함수명(매개변수1, 매개변수2, ...res) {
+  const params = res; // 배열로 접근 가능
+}
+함수명(1, 2, 3, 4, 5);
+```
+
+- 기본 함수 작성법 2가지
+
+```js
+// 기본 함수 정의
+function 함수명() {}
+// 함수 표현식 정의
+const 함수명 = function () {};
+```
+
+```js
+const add = function () {};
+
+function calcFunc(_fn) {
+  add();
+}
+
+calcFunc(add);
+```
+
+- 콜백 함수는 `특정한 이벤트` 가 발생 시 덩달아서 실행
+
+## 8. 화살표 함수(Arrow Function)
+
+- FE 에서 함수 작성 시 많이 볼 수 있는 형태
+- 활용 비율이 높다. 반드시 이해해 보자.
+
+### 8.1. 화살표 함수가 필요한 이유
+
+- 함수가 간략해 집니다.
+- 함수가 최적화 됩니다. (메모리 절약, 성능 최적화)
+- this 의 범위가 고정됩니다.
+- new 를 사용 못합니다.
+
+### 8.2. 화살표 함수 작성법 (반드시 이해하세요.)
+
+- 매개변수가 없는 경우
+
+```js
+// 기본 함수
+function say() {
+  console.log("안녕!");
+}
+// 표현식 함수
+const say = function () {
+  console.log("안녕!");
+};
+// 화살표 함수
+const sayArrow = () => {
+  console.log("안녕!");
+};
+// 실행 코드가 1줄이면 {} 블럭 생략 가능
+const sayArrow2 = () => console.log("안녕!");
+```
+
+- `매개변수` 가 오로지 `1개 있을 때`
+
+```js
+// 실행 코드가 1줄이면 {} 블럭 생략 가능
+// 매개변수 () 가 생략이 가능하다.
+const sayArrow3 = (_word) => console.log(_word);
+```
+
+- 매개변수가 2개 이상일 때
+
+```js
+// 실행 코드가 1줄이면 {} 블럭 생략 가능
+// 매개변수 2개 이상은 () 가 필수.
+const sayArrow4 = (_word, _name) => console.log(_word + _name);
+```
+
+## 9. 스코프(Scope)의 이해
+
+- 변수의 활용 가능한 범위
+- 제일 중요한 것은 `{}` 입니다.
+
+### 9.1. Scope 의 종류 2가지
+
+- 전역 범위: Global Scope
+- 지역 범위: Local Scope
+
+### 9.2. 전역 범위
+
+- 프로그램 어디서든 마음대로 접근해서 활용
+
+```js
+const appName = "JavaScript World";
+{
+  console.log(appName);
+}
+
+function say2() {
+  console.log(appName);
+}
+say2();
+```
+
+### 9.3. 지역 범위
+
+- `{}` 블록 안쪽을 `지역 범위` 라고 합니다.
+
+```js
+{
+  // 지역 변수
+  const appName = "JavaScript World";
+  console.log(appName);
+}
+
+function say3() {
+  console.log(appName);
+}
+say3();
+```
+
+- 아래는 정상적으로 실행된다.
+- function 키워드는 전역 범위에 등록이 된다.
+- 개발자의 선택 권한은 없다.
+
+```js
+// 전역 자리
+
+// 지역 자리
+{
+  function say4(_name) {
+    console.log(_name + " 안녕!");
+  }
+}
+say4("박길동");
+```
+
+- function 은 전역에 등록되므로 예측 곤란
+- 아래 코드는 협업 실패: `function` 은 전역에 등록해서 쓰자
+- `function` 은 지역에 코드하지 말자.
+
+```js
+// 전역 자리
+function say5(_word) {
+  console.log("기본 실행 함수: " + _word);
+}
+
+// 개발자: 홍길동 지역 자리
+{
+  function say5(_name) {
+    console.log(_name + " Hello");
+  }
+  say5("홍길동");
+}
+
+// 개발자: 고길동 지역 자리
+{
+  function say5(_name) {
+    console.log(_name + " 반가워!");
+  }
+  say5("고길동");
+}
+
+say5("테스터");
+```
+
+- 아래를 추천함.
+
+```js
+// 전역 자리
+function say5(_word) {
+  console.log("기본 실행 함수: " + _word);
+}
+
+// 개발자: 홍길동 지역 자리
+{
+  const say5 = function (_name) {
+    console.log(_name + " Hello");
+  };
+  say5("홍길동");
+}
+
+// 개발자: 고길동 지역 자리
+{
+  const say5 = function (_name) {
+    console.log(_name + " 반가워!");
+  };
+  say5("고길동");
+}
+
+say5("테스터");
+```
+
+- 화살표로 고치면
+
+```js
+// 전역 자리
+function say5(_word) {
+  console.log("기본 실행 함수: " + _word);
+}
+
+// 개발자: 홍길동 지역 자리
+{
+  const say5 = (_name) => console.log(_name + " Hello");
+  say5("홍길동");
+}
+
+// 개발자: 고길동 지역 자리
+{
+  const say5 = (_name) => console.log(_name + " 반가워!");
+  say5("고길동");
+}
+
+say5("테스터");
+```
+
+## 10. `this` 라는 키워드가 우리를 괴롭힐 겁니다.
+
+- this 가 스코프와 연결되면서 혼란스럽다.
+
+### 10.1. 전역 스코프의 this 는 `Window` 이다.
+
+```js
+function say() {
+  console.log(this); // Window(....
+  function hi() {
+    console.log(this); // Window(....
+  }
+  hi();
+}
+say();
+```
+
+### 10.2. function 의 this 는 `Window` 이다.
+
+```js
+const say = function () {
+  console.log(this);
+};
+say();
+```
+
+### 10.3. function 또는 표현식 함수는 this 사용 시 위험한 코드이다.
+
+- this 는 동일한 스코프를 가리켜서 값이 변할 위험 존재
+- this 는 물어보지도 않고 `var 변수`를 만들고 window 변수에 등록
+
+```js
+var brand = "nike";
+
+function now() {
+  this.brand = "adidas";
+}
+
+console.log("함수 실행 전: ", brand);
+
+now();
+console.log("함수 실행 후: ", brand);
+```
+
+### 10.4. 화살표 함수의 this 는 `Window` 가 아닐 수 있다.
+
+```js
+const say = () => {
+  console.log(this);
+};
+say();
+```
+
+### 10.5. 객체에 속성으로 만든 함수에서의 this
+
+- 객체에서 this 는 객체 전체를 가리킨다.
+- function 사용하니까 `this 가 상황에 따라서 변하는데?`
+
+```js
+const Person = {
+  name: "아이유",
+  age: 20,
+  sayHi: function () {
+    console.log(this);
+  },
+};
+
+Person.sayHi();
+```
+
+### 10.6. 객체 생성자 함수로 사용 시 this
+
+- 생성된 객체가 this 가 된다.
+
+```js
+// 대문자 즉 Pascal
+function Coffee() {
+  console.log(this);
+}
+
+Coffee();
+new Coffee();
+```
