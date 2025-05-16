@@ -2971,7 +2971,8 @@ console.log("total : ", total);
 
 #### 15.6.6. join()
 
-- 문자열로 배열을 연결한 결과를 만든다.
+- 아마도 많이 사용할 거에요. 정말로요.
+- `문자열로 배열을 연결한 결과`를 만든다.
 
 ```js
 const numArr1 = [1, 2, 3, 4];
@@ -2988,7 +2989,6 @@ console.log(`typeof ${typeof result} , ${result}`);
 
 ```js
 const numArr1 = [1, 2, 3, 4];
-// 기본은 ,  연결된 글자
 const result = numArr1.indexOf(3);
 console.log(`typeof ${typeof result} , ${result}`);
 // typeof number , 인덱스 2
@@ -3005,3 +3005,254 @@ const result = numArr1.includes(3);
 console.log(`typeof ${typeof result} , ${result}`);
 // typeof boolean , true
 ```
+
+## 16. 객체(`{}`)와 배열(`[]`)의 필수 이해 사항
+
+### 16.1. 반복문
+
+- 배열에서 사용하는 경우의 반복문 문법
+
+```js
+const arr = [1, 2, 3, 4];
+
+// 가장 전통적인 방식
+for (let i = 0; i < arr.length; i++) {
+  console.log(arr[i]);
+}
+
+// 배열의 요소 반복문 버전
+arr.forEach(function (item) {
+  console.log(item);
+});
+
+// 배열의 for of 문
+for (const item of arr) {
+  console.log(item);
+}
+
+// 배열의 map: 새로운 배열을 만듦
+const now = arr.map(function (item) {
+  return item;
+});
+```
+
+- 객체에서 사용하는 경우의 반복문 문법
+
+```js
+const person = {
+  age: 10,
+  nickName: "hong",
+  isMember: false,
+};
+
+// 객체의 속성명 알아내기
+for (let key in person) {
+  console.log(key); // age, nickName, isMember
+}
+
+// 객체의 속성에 보관하는 값 알아내기
+for (let key in person) {
+  console.log(person[key]); // 10, hong, false
+}
+```
+
+### 16.2. 값을 추출해서 보관하기
+
+- 배열
+
+```js
+const arr = ["사과", "딸기", "참외"];
+
+// 아래처럼 요소 값을 알아내는 것은 비추천
+arr[0];
+arr[1];
+arr[2];
+
+// 반복문으로 알아내기
+for (let i = 0; i < arr.length; i++) {
+  arr[i];
+}
+```
+
+- `배열 Spread 문법: 별이 5000만개`
+  - 배열의 요소를 알아내고,
+  - 배열의 요소를 복사하고,
+  - 새로운 배열에 담아주고
+
+```js
+const arr = ["사과", "딸기", "참외"];
+
+// 아래처럼 하지는 않습니다.
+const apple = arr[0];
+const straw = arr[1];
+const melon = arr[2];
+
+// 배열 Spread 문법
+const [apple, straw, melon] = [...arr];
+
+// 두 배열을 Spread 문법으로 합치기
+const numArr = [1, 2, 3];
+const strArr = ["a", "b", "c"];
+// [1, "a", "b", "c", 2, 3]
+// 아래처럼 권장하지는 않습니다.
+const sampleArr = [1, strArr[0], strArr[1], strArr[2], 2, 3];
+// Spread 활용
+const resultArr = [1, ...strArr, 2, 3];
+// 구분하세요. (Rest 파라미터 문법)
+function showArr(...rest) {}
+```
+
+- 객체
+
+```js
+const person = {
+  age: 10,
+  nickName: "hong",
+  isMember: false,
+};
+
+// 아래처럼 하지 않습니다.
+const newPerson = {
+  age: person.age,
+  nickName: person.nickName,
+  isMember: person.isMember,
+};
+
+// 객체 Spread 문법
+const nowPerson = { ...person };
+
+// 두개의 객체를 합치기
+const a = { age: 10, name: "hong" };
+const b = { city: "대구", year: 2025 };
+const result = { ...a, ...b };
+// 결과 {age: 10, name: "hong", city: "대구", year: 2025}
+
+// 원본 객체 복사하고 새로운 속성 추가하기
+const ori = { a: 1, b: "안녕" };
+const now = { ...ori, gogo: "happy" };
+// now { a: 1, b: "안녕", gogo: "happy" }
+
+// 함수에 매개변수로 객체를 복사해서 전달하기
+function show({ name, age }) {
+  console.log(name);
+  console.log(age);
+}
+
+const user = { name: "아이유", age: 20 };
+show({ ...user });
+```
+
+## 17. 비동기(Asyncronous) 통신
+
+- `비동기` 는 시간이 오래 걸리는 작업
+- 예) 데이터 서버에서 자료를 요청(Request) 및 응답(Response)
+- 예) 데이터 서버에서 파일 전송 시
+- 비동기 작업 중에 결과를 기다리지 않고 다른 작업을 병렬로 실행하도록
+
+### 17.1. 비동기 작업 문법 종류
+
+- XHR (Xml Http Request)
+- CallBack
+- Promise
+- async/await
+
+### 17.2. 데모용 API 사이트
+
+- https://jsonplaceholder.typicode.com
+- https://www.data.go.kr/index.jsp
+
+### 17.3. XHR
+
+- 서버와 통신하는 작업을 위해서 기본적으로 제공이 됨.
+- `Request`: 요청, url 로 자료를 요청한다.
+- `Response`: 응답, url 로부터 자료를 돌려받는다.
+- status 200 류의 값: 정상적으로 자료를 전달함.
+- status 400 류의 값: url 이 존재하지 않음.
+- status 500 류의 값: 데이터 서버가 오류거나 전원이 꺼짐.
+- https://developer.mozilla.org/ko/docs/Web/HTTP/Reference/Status
+
+```js
+// 데이터 서버에 자료를 호출함.
+
+// 1. xhr 객체 한개 만듦
+const xhr = new XMLHttpRequest();
+
+// 2. 주소를 연결함
+// 백엔드 호출 시 메소드 5가지(RestAPI 라고 함)
+// GET: 자료를 주세요.
+// POST: 자료를 추가합니다.
+// DELETE: 자료를 삭제해주세요.
+// PUT: 자료 전체를 수정해주세요.
+// PATCH: 자료 내용에서 일부분만 수정해주세요.
+xhr.open("GET", "https://jsonplaceholder.typicode.com/photos");
+
+// 3. 웹 브라우저로 요청을 합니다.
+xhr.send();
+
+// 4. 요청 이후 응답이 오기를 기다린다.
+xhr.onload = function () {
+  console.log("요청이 되어졌을 때 백엔드 회신 정보: ", xhr);
+  if (xhr.status === 200) {
+    console.log("정상적인 Response 됨");
+  } else if (xhr.status === 404) {
+    console.log("주소가 잘못되었어요.");
+  } else if (xhr.status === 505) {
+    console.log("서버의 오류입니다. 잠시 후 실행해주세요.");
+  }
+};
+```
+
+### 17.4. CallBack 활용하기
+
+- 자료 응답 후 처리하기
+
+```js
+function getData(api = "posts", fn) {
+  // 1. xhr 객체 한개 만듦
+  const xhr = new XMLHttpRequest();
+
+  // 2. 주소를 연결함
+  xhr.open("GET", `https://jsonplaceholder.typicode.com/${api}`);
+
+  // 3. 웹 브라우저로 요청을 합니다.
+  xhr.send();
+
+  // 4. 요청 이후 응답이 오기를 기다린다.
+  xhr.onload = function () {
+    //console.log("요청이 되어졌을 때 백엔드 회신 정보: ", xhr);
+    if (xhr.status === 200) {
+      //console.log("정상적인 Response 됨: " + xhr.response);
+      // 콜백 함수: 자료가 오면 자료를 활용하고 싶다.
+      fn(xhr.response);
+    } else if (xhr.status === 404) {
+      console.log("주소가 잘못되었어요.");
+    } else if (xhr.status === 505) {
+      console.log("서버의 오류입니다. 잠시 후 실행해주세요.");
+    }
+  };
+}
+// 콜백 함수 만들기: 자료가 들어오면 처리함.
+const postsParser = function (res) {
+  console.log(res);
+};
+const commentsParser = function (res) {};
+const albumsParser = function (res) {};
+const photosParser = function (res) {};
+const todosParser = function (res) {};
+const usersParser = function (res) {};
+
+// 함수 사용
+getData("posts", postsParser);
+getData("comments", commentsParser);
+getData("albums", albumsParser);
+getData("photos", photosParser);
+getData("todos", todosParser);
+getData("users", usersParser);
+```
+
+### 17.5. Promise 활용하기
+
+- 서버 연동이 끝날 때 원하는 콜백 함수 실행
+- 2개의 매개변수를 전달 받는다.
+- resolve 콜백 함수: 성공 시 실행 함수
+- reject 콜백 함수: 실패 시 실행 함수
