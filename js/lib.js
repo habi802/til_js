@@ -89,8 +89,22 @@ function getData(api = "posts") {
 }
 // 함수 사용
 getData("posts")
-  .then(function () {})
-  .catch(function () {});
+  .then(function (data) {
+    getData("comments");
+  })
+  .then(function (data) {
+    getData("albums");
+  })
+  .then(function (data) {
+    getData("photos");
+  })
+  .then(function (data) {
+    getData("todos");
+  })
+  .then(function (data) {
+    getData("users");
+  })
+  .catch(function (err) {});
 getData("comments").then().catch();
 getData("albums").then().catch();
 getData("photos").then().catch();
